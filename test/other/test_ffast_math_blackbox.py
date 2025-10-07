@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'tools'))
 
 def test_ffast_math_blackbox_approach():
-    """Demonstrate the black box testing approach for --fast-math flag validation."""
+    """Demonstrate the black box testing approach for --fast-math flag validation"""
     print("Black Box Test Approach for --fast-math flag:")
     print("=" * 50)
     print("\n1. The maintainer suggested using 'emcc -v' to print subcommands to stderr")
