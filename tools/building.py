@@ -1261,6 +1261,8 @@ def run_binaryen_command(tool, infile, outfile=None, args=None, debug=False, std
 
 
 def run_wasm_opt(infile, outfile=None, args=[], **kwargs):  # noqa
+  if settings.FAST_MATH:
+    args.append('--fast-math')
   return run_binaryen_command('wasm-opt', infile, outfile, args=args, **kwargs)
 
 
