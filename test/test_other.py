@@ -15757,18 +15757,16 @@ addToLibrary({
     self.assertIn('foo.cpp', out)
     self.assertIn('/emsdk/emscripten/system/lib/libc/musl/src/string/strcmp.c', out)
 
-  @uses_canonical_tmp
-  @with_env_modify({'EMCC_DEBUG': '1'})
   def test_fast_math_debug_output(self):
     create_file('test.c', '''
       #include <math.h>
       int main() { return (int)(sin(1.0) * 100); }
     ''')
     
-    err = self.run_process([EMCC, 'test.c', '-O2', '-sFAST_MATH=1'], stderr=PIPE).stderr
+    err = self.run_process([EMCC, 'test.c', '-v', '-O2', '-ffast-math'], stderr=PIPE).stderr
     self.assertContained('--fast-math', err)
     
-    err_no_fast = self.run_process([EMCC, 'test.c', '-O2', '-sFAST_MATH=0'], stderr=PIPE).stderr
+    err_no_fast = self.run_process([EMCC, 'test.c', '-v', '-O2'], stderr=PIPE).stderr
     self.assertNotContained('--fast-math', err_no_fast)
 
   def test_fast_math_size_comparison(self):
@@ -15778,10 +15776,10 @@ addToLibrary({
       int main() { return (int)f(1.5); }
     ''')
     
-    self.run_process([EMCC, 'math.c', '-O2', '-sFAST_MATH=0', '-o', 'no_fast.wasm'])
+    self.run_process([EMCC, 'math.c', '-O2', '-o', 'no_fast.wasm'])
     no_fast_size = os.path.getsize('no_fast.wasm')
     
-    self.run_process([EMCC, 'math.c', '-O2', '-sFAST_MATH=1', '-o', 'with_fast.wasm'])
+    self.run_process([EMCC, 'math.c', '-O2', '-ffast-math', '-o', 'with_fast.wasm'])
     with_fast_size = os.path.getsize('with_fast.wasm')
     
     self.assertLessEqual(with_fast_size, no_fast_size)
